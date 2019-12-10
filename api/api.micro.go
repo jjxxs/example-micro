@@ -89,3 +89,62 @@ type greeterHandler struct {
 func (h *greeterHandler) Hello(ctx context.Context, in *HelloRequest, out *HelloResponse) error {
 	return h.GreeterHandler.Hello(ctx, in, out)
 }
+
+// Client API for HelloCounter service
+
+type HelloCounterService interface {
+	Inc(ctx context.Context, in *IncRequest, opts ...client.CallOption) (*SumResponse, error)
+}
+
+type helloCounterService struct {
+	c    client.Client
+	name string
+}
+
+func NewHelloCounterService(name string, c client.Client) HelloCounterService {
+	if c == nil {
+		c = client.NewClient()
+	}
+	if len(name) == 0 {
+		name = "hellocounter"
+	}
+	return &helloCounterService{
+		c:    c,
+		name: name,
+	}
+}
+
+func (c *helloCounterService) Inc(ctx context.Context, in *IncRequest, opts ...client.CallOption) (*SumResponse, error) {
+	req := c.c.NewRequest(c.name, "HelloCounter.Inc", in)
+	out := new(SumResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for HelloCounter service
+
+type HelloCounterHandler interface {
+	Inc(context.Context, *IncRequest, *SumResponse) error
+}
+
+func RegisterHelloCounterHandler(s server.Server, hdlr HelloCounterHandler, opts ...server.HandlerOption) error {
+	type helloCounter interface {
+		Inc(ctx context.Context, in *IncRequest, out *SumResponse) error
+	}
+	type HelloCounter struct {
+		helloCounter
+	}
+	h := &helloCounterHandler{hdlr}
+	return s.Handle(s.NewHandler(&HelloCounter{h}, opts...))
+}
+
+type helloCounterHandler struct {
+	HelloCounterHandler
+}
+
+func (h *helloCounterHandler) Inc(ctx context.Context, in *IncRequest, out *SumResponse) error {
+	return h.HelloCounterHandler.Inc(ctx, in, out)
+}

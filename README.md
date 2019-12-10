@@ -2,21 +2,27 @@
 
 1. Starten Sie `etcd`.
 
-```
-make start-registry
-```
+   ```
+   make start-registry
+   ```
 
-2. Starten Sie den Service.
+2. Starten Sie den Greeter-Service.
 
-```
-make start-service
-```
+   ```
+   make start-counter
+   ```
 
-3. Starten Sie den Client
+3. Starten Sie den Counter-Service.
 
-```
-make start-client
-```
+   ```
+   make start-greeter
+   ```
+
+4. Starten Sie den Client
+
+   ```
+   make start-client
+   ```
 
 Wenn Sie die Registry stoppen, gibt es einen Timeout vom Client, aber er scheint den alt bekannten Service erfolgreich
 zu connecten.

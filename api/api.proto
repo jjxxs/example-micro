@@ -11,3 +11,15 @@ message HelloRequest {
 message HelloResponse {
   string greeting = 2;
 }
+
+service HelloCounter {
+  rpc Inc(IncRequest) returns (SumResponse) {}
+}
+
+message IncRequest {
+  string name = 3;
+}
+
+message SumResponse {
+  int32 counter = 4;
+}

@@ -14,9 +14,14 @@ type Client struct {
 }
 
 func (c Client) interact() {
-	for {
+	for i := 0; i < 20; i++ {
+		name := "Linda"
+		if i%3 == 0 {
+			name = "John"
+		}
+
 		rsp, err := c.greeter.Hello(context.TODO(), &api.HelloRequest{
-			Name: "John",
+			Name: name,
 		})
 		if err != nil {
 			fmt.Println(err)
@@ -25,7 +30,7 @@ func (c Client) interact() {
 		}
 
 		fmt.Print("sleeping...")
-		time.Sleep(10 * time.Second)
+		time.Sleep(2 * time.Second)
 		fmt.Println("awake")
 	}
 }

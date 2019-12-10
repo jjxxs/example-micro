@@ -6,8 +6,11 @@ all:
 start-registry:
 	etcd
 
-start-service:
-	MICRO_REGISTRY=etcd go run service/main.go
+start-counter:
+	MICRO_REGISTRY=etcd go run counter-service/main.go
+
+start-greeter:
+	MICRO_REGISTRY=etcd go run greeter-service/main.go
 
 start-client:
 	MICRO_REGISTRY=etcd go run client/main.go
