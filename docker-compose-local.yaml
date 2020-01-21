@@ -9,17 +9,23 @@ services:
       - "8500:8500"
       - "8600:53/udp"
   counter-service:
-    image: docker.pkg.github.com/vesose/example-micro/counter:latest
+    build:
+      context: .
+      dockerfile: counter-service.dockerfile
     command: --registry_address=consul:8500
     links:
       - consul
   greeter-service:
-    image: docker.pkg.github.com/vesose/example-micro/greeter:latest
+    build:
+      context: .
+      dockerfile: greeter-service.dockerfile
     command: --registry_address=consul:8500
     links:
       - consul
   client:
-    image: docker.pkg.github.com/vesose/example-micro/client:latest
+    build:
+      context: .
+      dockerfile: client.dockerfile
     command: --registry_address=consul:8500
     links:
       - consul
