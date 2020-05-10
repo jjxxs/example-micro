@@ -1,0 +1,63 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+    - name: lint
+      image: golangci/golangci-lint
+      commands:
+          - golangci-lint run
+
+    - name: docker (greeter-service)
+      image: plugins/docker
+      settings:
+          dockerfile: greeter-service/Dockerfile
+          username:
+              from_secret: gh_username
+          password:
+              from_secret: gh_token
+          registry: docker.pkg.github.com
+          repo: docker.pkg.github.com/vesose/example-micro/greeter
+      when:
+          branch:
+              - master
+              - develop
+          event:
+              exclude:
+                  - pull_request
+
+    - name: docker (counter-service)
+      image: plugins/docker
+      settings:
+          dockerfile: counter-counter/Dockerfile
+          username:
+              from_secret: gh_username
+          password:
+              from_secret: gh_token
+          registry: docker.pkg.github.com
+          repo: docker.pkg.github.com/vesose/example-micro/counter
+      when:
+          branch:
+              - master
+              - develop
+          event:
+              exclude:
+                  - pull_request
+
+    - name: docker (client)
+      image: plugins/docker
+      settings:
+          dockerfile: client/Dockerfile
+          username:
+              from_secret: gh_username
+          password:
+              from_secret: gh_token
+          registry: docker.pkg.github.com
+          repo: docker.pkg.github.com/vesose/example-micro/client
+      when:
+          branch:
+              - master
+              - develop
+          event:
+              exclude:
+                  - pull_request

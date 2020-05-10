@@ -1,4 +1,4 @@
-FROM obraun/vss-micro-jenkins as builder
+FROM obraun/golang-micro-ci as builder
 COPY . /app
 WORKDIR /app
 RUN go build -o greeter-service/greeter-service greeter-service/main.go

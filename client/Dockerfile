@@ -1,4 +1,4 @@
-FROM obraun/vss-micro-jenkins as builder
+FROM obraun/golang-micro-ci as builder
 COPY . /app
 WORKDIR /app
 RUN go build -o client/client client/main.go
