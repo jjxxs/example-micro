@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/micro/go-micro"
-	api "github.com/vesose/example-micro/api"
+	"github.com/micro/go-micro/v2"
+	"github.com/vesose/example-micro/api"
 )
 
 type Counter struct {
@@ -18,6 +18,7 @@ func (g *Counter) Inc(ctx context.Context, req *api.IncRequest, rsp *api.SumResp
 	g.counters[name]++
 	rsp.Counter = g.counters[name]
 	fmt.Printf("Request for %s, new counter = %d\n", name, g.counters[name])
+
 	return nil
 }
 
@@ -29,7 +30,11 @@ func main() {
 
 	service.Init()
 
-	api.RegisterHelloCounterHandler(service.Server(), &Counter{counters: make(map[string]int32)})
+	if err := api.RegisterHelloCounterHandler(service.Server(), &Counter{
+		counters: make(map[string]int32),
+	}); err != nil {
+		log.Fatal(err)
+	}
 
 	if err := service.Run(); err != nil {
 		log.Fatal(err)

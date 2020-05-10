@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/micro/go-micro"
-	api "github.com/vesose/example-micro/api"
+	"github.com/micro/go-micro/v2"
+	"github.com/vesose/example-micro/api"
 )
 
 type Greeter struct {
@@ -14,13 +14,13 @@ type Greeter struct {
 }
 
 func (g *Greeter) Hello(ctx context.Context, req *api.HelloRequest, rsp *api.HelloResponse) error {
-
 	counterRsp, err := g.counter.Inc(context.TODO(), &api.IncRequest{
 		Name: req.Name,
 	})
 
 	if err != nil {
 		fmt.Println(err)
+
 		rsp.Greeting = "Hiho " + req.Name
 	} else {
 		fmt.Printf("Counter = %d\n", counterRsp.Counter)
@@ -45,9 +45,11 @@ func main() {
 	counter := micro.NewService()
 	counter.Init()
 
-	api.RegisterGreeterHandler(service.Server(), &Greeter{
+	if err := api.RegisterGreeterHandler(service.Server(), &Greeter{
 		counter: api.NewHelloCounterService("counter", counter.Client()),
-	})
+	}); err != nil {
+		log.Fatal(err)
+	}
 
 	if err := service.Run(); err != nil {
 		log.Fatal(err)

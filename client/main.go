@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/micro/go-micro"
-	api "github.com/vesose/example-micro/api"
+	"github.com/micro/go-micro/v2"
+	"github.com/vesose/example-micro/api"
 )
 
 type Client struct {
@@ -36,7 +36,6 @@ func (c Client) interact() {
 }
 
 func main() {
-
 	service := micro.NewService()
 	service.Init()
 
@@ -46,5 +45,4 @@ func main() {
 	}
 
 	client.interact()
-
 }

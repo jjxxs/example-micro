@@ -11,8 +11,9 @@ import (
 
 import (
 	context "context"
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
+	api "github.com/micro/go-micro/v2/api"
+	client "github.com/micro/go-micro/v2/client"
+	server "github.com/micro/go-micro/v2/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -27,9 +28,16 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reference imports to suppress errors if they are not otherwise used.
+var _ api.Endpoint
 var _ context.Context
 var _ client.Option
 var _ server.Option
+
+// Api Endpoints for Greeter service
+
+func NewGreeterEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
 
 // Client API for Greeter service
 
@@ -43,12 +51,6 @@ type greeterService struct {
 }
 
 func NewGreeterService(name string, c client.Client) GreeterService {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(name) == 0 {
-		name = "greeter"
-	}
 	return &greeterService{
 		c:    c,
 		name: name,
@@ -90,6 +92,12 @@ func (h *greeterHandler) Hello(ctx context.Context, in *HelloRequest, out *Hello
 	return h.GreeterHandler.Hello(ctx, in, out)
 }
 
+// Api Endpoints for HelloCounter service
+
+func NewHelloCounterEndpoints() []*api.Endpoint {
+	return []*api.Endpoint{}
+}
+
 // Client API for HelloCounter service
 
 type HelloCounterService interface {
@@ -102,12 +110,6 @@ type helloCounterService struct {
 }
 
 func NewHelloCounterService(name string, c client.Client) HelloCounterService {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(name) == 0 {
-		name = "hellocounter"
-	}
 	return &helloCounterService{
 		c:    c,
 		name: name,
