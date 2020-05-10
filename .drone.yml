@@ -29,7 +29,7 @@ steps:
     - name: docker (counter-service)
       image: plugins/docker
       settings:
-          dockerfile: counter-counter/Dockerfile
+          dockerfile: counter-service/Dockerfile
           username:
               from_secret: gh_username
           password:
