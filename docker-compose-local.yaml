@@ -1,31 +1,48 @@
 version: "3"
 services:
-    consul:
-        command: -server -bootstrap -rejoin
-        image: progrium/consul:latest
-        ports:
-            - "8300:8300"
-            - "8400:8400"
-            - "8500:8500"
-            - "8600:53/udp"
+    etcd:
+        image: "bitnami/etcd:latest"
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+            - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    nats:
+        image: nats
+        command: "--debug"
     counter-service:
         build:
             context: .
             dockerfile: counter-service/Dockerfile
-        command: --registry_address=consul:8500
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379 --broker_address=nats:4222
         links:
-            - consul
+            - etcd
+            - nats
     greeter-service:
         build:
             context: .
             dockerfile: greeter-service/Dockerfile
-        command: --registry_address=consul:8500
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379
         links:
-            - consul
+            - etcd
+    logger-service:
+        build:
+            context: .
+            dockerfile: logger-service/Dockerfile
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379 --broker_address=nats://nats:4222
+        links:
+            - etcd
+            - nats
     client:
         build:
             context: .
             dockerfile: client/Dockerfile
-        command: --registry_address=consul:8500
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379
         links:
-            - consul
+            - etcd

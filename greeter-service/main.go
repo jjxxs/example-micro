@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-plugins/registry/etcdv3/v2"
 	"github.com/vesose/example-micro/api"
 )
 
@@ -35,9 +36,12 @@ func (g *Greeter) Hello(ctx context.Context, req *api.HelloRequest, rsp *api.Hel
 }
 
 func main() {
+	registry := etcdv3.NewRegistry()
+
 	service := micro.NewService(
 		micro.Name("greeter"),
 		micro.Version("latest"),
+		micro.Registry(registry),
 	)
 
 	service.Init()

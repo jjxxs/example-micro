@@ -44,6 +44,24 @@ steps:
               exclude:
                   - pull_request
 
+    - name: docker (logger-service)
+      image: plugins/docker
+      settings:
+          dockerfile: logger-service/Dockerfile
+          username:
+              from_secret: gh_username
+          password:
+              from_secret: gh_token
+          registry: docker.pkg.github.com
+          repo: docker.pkg.github.com/vesose/example-micro/logger
+      when:
+          branch:
+              - master
+              - develop
+          event:
+              exclude:
+                  - pull_request
+
     - name: docker (client)
       image: plugins/docker
       settings:

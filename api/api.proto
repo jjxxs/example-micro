@@ -25,3 +25,12 @@ message IncRequest {
 message SumResponse {
   int32 counter = 4;
 }
+
+message Event {
+	// unique id
+	string id = 1;
+	// unix timestamp
+	int64 timestamp = 2;
+	// message
+	string message = 3;
+}

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-plugins/registry/etcdv3/v2"
 	"github.com/vesose/example-micro/api"
 )
 
@@ -36,7 +37,9 @@ func (c Client) interact() {
 }
 
 func main() {
-	service := micro.NewService()
+	registry := etcdv3.NewRegistry()
+
+	service := micro.NewService(micro.Registry(registry))
 	service.Init()
 
 	// create the greeter client using the service name and client
