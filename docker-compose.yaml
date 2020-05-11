@@ -1,25 +1,40 @@
 version: "3"
 services:
-  consul:
-    command: -server -bootstrap -rejoin
-    image: progrium/consul:latest
-    ports:
-      - "8300:8300"
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:53/udp"
-  counter-service:
-    image: docker.pkg.github.com/vesose/example-micro/counter:latest
-    command: --registry_address=consul:8500
-    links:
-      - consul
-  greeter-service:
-    image: docker.pkg.github.com/vesose/example-micro/greeter:latest
-    command: --registry_address=consul:8500
-    links:
-      - consul
-  client:
-    image: docker.pkg.github.com/vesose/example-micro/client:latest
-    command: --registry_address=consul:8500
-    links:
-      - consul
+    etcd:
+        image: "bitnami/etcd:latest"
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+            - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    nats:
+        image: nats
+        command: "--debug"
+    counter-service:
+        image: docker.pkg.github.com/vesose/example-micro/counter:latest
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379 --broker_address=nats:4222
+        links:
+            - etcd
+            - nats
+    greeter-service:
+        image: docker.pkg.github.com/vesose/example-micro/greeter:latest
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379
+        links:
+            - etcd
+    logger-service:
+        image: docker.pkg.github.com/vesose/example-micro/logger:latest
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379 --broker_address=nats://nats:4222
+        links:
+            - etcd
+            - nats
+    client:
+        image: docker.pkg.github.com/vesose/example-micro/client:latest
+        environment:
+            - ALLOW_NONE_AUTHENTICATION=yes
+        command: --registry_address=etcd:2379
+        links:
+            - etcd
