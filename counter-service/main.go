@@ -4,12 +4,17 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/logger"
 	nats "github.com/micro/go-plugins/broker/nats/v2"
+	zl "github.com/micro/go-plugins/logger/zerolog/v2"
 	"github.com/micro/go-plugins/registry/etcdv3/v2"
+	"github.com/rs/zerolog"
 	"github.com/vesose/example-micro/api"
 )
 
@@ -24,9 +29,12 @@ func (g *Counter) Inc(ctx context.Context, req *api.IncRequest, rsp *api.SumResp
 	rsp.Counter = g.counters[name]
 	msg := fmt.Sprintf("Request for %s, new counter = %d", name, g.counters[name])
 
+	logger.Info(msg)
+
 	uuid, err := uuid.NewRandom()
+
 	if err != nil {
-		fmt.Printf("error creating uuid: %v", err)
+		logger.Errorf("error creating uuid: %v", err)
 	}
 
 	if err := g.publisher.Publish(context.Background(), &api.Event{
@@ -34,13 +42,21 @@ func (g *Counter) Inc(ctx context.Context, req *api.IncRequest, rsp *api.SumResp
 		Timestamp: time.Now().Unix(),
 		Message:   msg,
 	}); err != nil {
-		fmt.Printf("error while publishing: %v", err)
+		logger.Errorf("error while publishing: %v", err)
 	}
 
 	return nil
 }
 
 func main() {
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+
+	output := zerolog.ConsoleWriter{Out: os.Stdout}
+	output.FormatLevel = func(i interface{}) string {
+		return strings.ToUpper(fmt.Sprintf("| %-6s|", i))
+	}
+	logger.DefaultLogger = zl.NewLogger(logger.WithOutput(output), logger.WithLevel(logger.DebugLevel))
+
 	registry := etcdv3.NewRegistry()
 	broker := nats.NewBroker()
 

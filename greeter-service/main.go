@@ -3,10 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
+	"os"
+	"strings"
 
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/logger"
+	zl "github.com/micro/go-plugins/logger/zerolog/v2"
 	"github.com/micro/go-plugins/registry/etcdv3/v2"
+	"github.com/rs/zerolog"
 	"github.com/vesose/example-micro/api"
 )
 
@@ -20,11 +24,11 @@ func (g *Greeter) Hello(ctx context.Context, req *api.HelloRequest, rsp *api.Hel
 	})
 
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 
 		rsp.Greeting = "Hiho " + req.Name
 	} else {
-		fmt.Printf("Counter = %d\n", counterRsp.Counter)
+		logger.Infof("Counter = %d", counterRsp.Counter)
 		if counterRsp.GetCounter()%2 == 1 {
 			rsp.Greeting = "Hello " + req.Name
 		} else {
@@ -36,6 +40,14 @@ func (g *Greeter) Hello(ctx context.Context, req *api.HelloRequest, rsp *api.Hel
 }
 
 func main() {
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+
+	output := zerolog.ConsoleWriter{Out: os.Stdout}
+	output.FormatLevel = func(i interface{}) string {
+		return strings.ToUpper(fmt.Sprintf("| %-6s|", i))
+	}
+	logger.DefaultLogger = zl.NewLogger(logger.WithOutput(output), logger.WithLevel(logger.DebugLevel))
+
 	registry := etcdv3.NewRegistry()
 
 	service := micro.NewService(
@@ -52,10 +64,10 @@ func main() {
 	if err := api.RegisterGreeterHandler(service.Server(), &Greeter{
 		counter: api.NewHelloCounterService("counter", counter.Client()),
 	}); err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	if err := service.Run(); err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }
