@@ -7,6 +7,10 @@ services:
             - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
     nats:
         image: nats
+    redis:
+        image: "bitnami/redis:latest"
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
     counter-service:
         build:
             context: .
@@ -42,6 +46,6 @@ services:
             dockerfile: client/Dockerfile
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
-        command: --registry_address=etcd:2379
+        command: --registry_address=etcd:2379 --store_address=redis:6379
         links:
             - etcd

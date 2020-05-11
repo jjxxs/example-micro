@@ -290,6 +290,8 @@ github.com/micro/go-plugins/logger/zerolog/v2 v2.5.0 h1:N6wCeooo+5b7HjlX3tZgaPqo
 github.com/micro/go-plugins/logger/zerolog/v2 v2.5.0/go.mod h1:3d4WgKG1WxBWEk/xHMV7mg6YN6ZIRaSYU8rWAdDKJAk=
 github.com/micro/go-plugins/registry/etcdv3/v2 v2.5.0 h1:lN0prsgvNCRbV2Pb+ti2OIcD+WdUg/zbawDshUG61D0=
 github.com/micro/go-plugins/registry/etcdv3/v2 v2.5.0/go.mod h1:cMCJnyUe+IXpFnsD1ODoBIw1NMu3k77giESpbxW+gbA=
+github.com/micro/go-plugins/store/redis/v2 v2.5.0 h1:yjRS/gt4iI7GU22VxdqoEV95J22r9fa6CO8VILIeOEs=
+github.com/micro/go-plugins/store/redis/v2 v2.5.0/go.mod h1:xzHTbaF3J6g0Nj/LMCVRuNPNlrDv6ebEJlMp1xBSyxs=
 github.com/miekg/dns v1.1.15/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
 github.com/miekg/dns v1.1.27 h1:aEH/kqUzUxGJ/UHcEKdJY+ugH6WEzsEBBSPa8zuy1aM=
 github.com/miekg/dns v1.1.27/go.mod h1:KNUDUusw/aVsxyTYZM1oqvCicbwhgbNgztCETuNZ7xM=
@@ -636,6 +638,8 @@ gopkg.in/h2non/gock.v1 v1.0.15/go.mod h1:sX4zAkdYX1TRGJ2JY156cFspQn4yRWn6p9EMdOD
 gopkg.in/ini.v1 v1.42.0/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
 gopkg.in/ini.v1 v1.44.0/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
 gopkg.in/ns1/ns1-go.v2 v2.0.0-20190730140822-b51389932cbc/go.mod h1:VV+3haRsgDiVLxyifmMBrBIuCWFBPYKbRssXB9z67Hw=
+gopkg.in/redis.v5 v5.2.9 h1:MNZYOLPomQzZMfpN3ZtD1uyJ2IDonTTlxYiV/pEApiw=
+gopkg.in/redis.v5 v5.2.9/go.mod h1:6gtv0/+A4iM08kdRfocWYB3bLX2tebpNtfKlFT6H4mY=
 gopkg.in/resty.v1 v1.9.1/go.mod h1:vo52Hzryw9PnPHcJfPsBiFW62XhNx5OczbV9y+IMpgc=
 gopkg.in/resty.v1 v1.12.0/go.mod h1:mDo4pnntr5jdWRML875a/NmxYqAlA73dVijT2AXvQQo=
 gopkg.in/square/go-jose.v2 v2.3.1/go.mod h1:M9dMgbHiYLoDGQrXy7OpJDJWiKiU//h+vD76mk0e1AI=

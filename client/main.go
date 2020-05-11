@@ -4,19 +4,23 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/logger"
+	"github.com/micro/go-micro/v2/store"
 	zl "github.com/micro/go-plugins/logger/zerolog/v2"
 	"github.com/micro/go-plugins/registry/etcdv3/v2"
+	"github.com/micro/go-plugins/store/redis/v2"
 	"github.com/rs/zerolog"
 	"github.com/vesose/example-micro/api"
 )
 
 type Client struct {
 	greeter api.GreeterService
+	store   store.Store
 }
 
 func (c Client) interact() {
@@ -35,9 +39,37 @@ func (c Client) interact() {
 			logger.Infof("Received: %+v", rsp.GetGreeting())
 		}
 
-		logger.Info("sleeping...")
-		time.Sleep(1 * time.Second)
-		logger.Info("awake")
+		res, err := store.DefaultStore.Read("sleep")
+
+		sleep := 100
+
+		if err != nil {
+			logger.Errorf("error while reading from store: %+v", err)
+		} else {
+			sleep, err = strconv.Atoi(string(res[0].Value))
+			if err != nil {
+				logger.Errorf("error while converting value from store: %+v", err)
+				sleep = 1
+			} else {
+				logger.Infof("read from store: %+v", sleep)
+			}
+		}
+
+		newSleep := []byte(fmt.Sprintf("%v", sleep+100))
+
+		record := store.Record{
+			Key:    "sleep",
+			Value:  newSleep,
+			Expiry: 0,
+		}
+		err = store.DefaultStore.Write(&record)
+
+		if err != nil {
+			logger.Errorf("error while writing to store: %+v", err)
+		}
+
+		logger.Infof("sleeping %v milliseconds...", sleep)
+		time.Sleep(time.Duration(sleep) * time.Millisecond)
 	}
 }
 
@@ -51,15 +83,18 @@ func main() {
 	logger.DefaultLogger = zl.NewLogger(logger.WithOutput(output), logger.WithLevel(logger.DebugLevel))
 
 	registry := etcdv3.NewRegistry()
+	store := redis.NewStore()
 
 	service := micro.NewService(
 		micro.Registry(registry),
+		micro.Store(store),
 	)
 	service.Init()
 
 	// create the greeter client using the service name and client
 	client := Client{
 		greeter: api.NewGreeterService("greeter", service.Client()),
+		store:   service.Options().Store,
 	}
 
 	client.interact()

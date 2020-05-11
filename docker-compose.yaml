@@ -7,6 +7,10 @@ services:
             - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
     nats:
         image: nats
+    redis:
+        image: "bitnami/redis:latest"
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
     counter-service:
         image: docker.pkg.github.com/vesose/example-micro/counter:latest
         environment:

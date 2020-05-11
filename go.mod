@@ -9,6 +9,7 @@ require (
 	github.com/micro/go-plugins/broker/nats/v2 v2.5.0
 	github.com/micro/go-plugins/logger/zerolog/v2 v2.5.0
 	github.com/micro/go-plugins/registry/etcdv3/v2 v2.5.0
+	github.com/micro/go-plugins/store/redis/v2 v2.5.0
 	github.com/rs/zerolog v1.18.0
 	google.golang.org/protobuf v1.22.0
 )
