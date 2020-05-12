@@ -39,9 +39,9 @@ func (c Client) interact() {
 			logger.Infof("Received: %+v", rsp.GetGreeting())
 		}
 
-		res, err := store.DefaultStore.Read("sleep")
+		res, err := c.store.Read("sleep")
 
-		sleep := 100
+		sleep := 1000
 
 		if err != nil {
 			logger.Errorf("error while reading from store: %+v", err)
@@ -53,19 +53,6 @@ func (c Client) interact() {
 			} else {
 				logger.Infof("read from store: %+v", sleep)
 			}
-		}
-
-		newSleep := []byte(fmt.Sprintf("%v", sleep+100))
-
-		record := store.Record{
-			Key:    "sleep",
-			Value:  newSleep,
-			Expiry: 0,
-		}
-		err = store.DefaultStore.Write(&record)
-
-		if err != nil {
-			logger.Errorf("error while writing to store: %+v", err)
 		}
 
 		logger.Infof("sleeping %v milliseconds...", sleep)
