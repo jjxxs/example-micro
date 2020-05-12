@@ -30,7 +30,7 @@ func (c Client) interact() {
 			name = "John"
 		}
 
-		rsp, err := c.greeter.Hello(context.TODO(), &api.HelloRequest{
+		rsp, err := c.greeter.Hello(context.Background(), &api.HelloRequest{
 			Name: name,
 		})
 		if err != nil {

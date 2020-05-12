@@ -19,7 +19,7 @@ type Greeter struct {
 }
 
 func (g *Greeter) Hello(ctx context.Context, req *api.HelloRequest, rsp *api.HelloResponse) error {
-	counterRsp, err := g.counter.Inc(context.TODO(), &api.IncRequest{
+	counterRsp, err := g.counter.Inc(context.Background(), &api.IncRequest{
 		Name: req.Name,
 	})
 
