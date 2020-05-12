@@ -23,7 +23,7 @@ Nachricht veröffentlicht wird.
 
 ### Logger
 
-Hat Log-Nachrichten aboniert und gibt diese auf der Console aus.
+Hat Log-Nachrichten abonniert und gibt diese auf der Console aus.
 
 ## Starten
 
