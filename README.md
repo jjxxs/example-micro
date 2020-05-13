@@ -23,13 +23,57 @@ Nachricht veröffentlicht wird.
 
 ### Logger
 
-Hat Log-Nachrichten abonniert und gibt diese auf der Console aus.
+Hat Log-Nachrichten abonniert und gibt diese auf der Console aus. In den Key/Value-Store
+fügt er eine Zufallszahl mit dem Schlüssel `sleep` ein.
 
 ## Starten
 
 Zum Ausprobieren steht ein Client zur Verfügung, der mit dem Greeter-Service kommuniziert.
+Zwischen zwei Anfragen wartet der Client immer eine gewisse Zeit. Die Zeit versucht
+er aus einem Key/Value-Store auszulesen.
 
-### Starten mit lokalen Sourcen
+### Starten mit wenig Docker oder ohne Docker
+
+**[wenig Docker]**
+
+Starten Sie die drei benötigten Server mit folgendem Kommando:
+
+```
+docker-compose -f docker-compose-deps.yaml up
+```
+
+oder
+
+**[kein Docker]**
+
+Installieren Sie etcd, NATS und Redis und starten Sie in je einem Terminal
+die 3 benötigten Server:
+
+```
+# jede Zeile in einem anderen Terminal
+etcd
+nats-server
+redis-server
+```
+
+**[und jetzt für beide Ansätze]**
+
+die drei Services und den Client:
+
+```
+# jede Zeile in einem anderen Terminal
+go run greeter-service/main.go
+go run counter-service/main.go
+go run logger-service/main.go
+go run client/main.go
+```
+
+### Starten mit Docker aus lokalen Sourcen
+
+**[Achung: go-micro findet in der aktuellen Version 2.6.0 den Redis nicht, wenn
+er nicht auf localhost läuft. Daher funktioniert der Zugriff auf den Store nicht,
+wenn auch die Services und der Client als Docker-Conatainer laufen. Mit den
+Entwicklern habe ich diesbezüglich schon Verbindung aufgenommen.]**
 
 Die Datei `docker-compose-local.yaml` definiert die Services über die `Dockerfiles`.
 Erzeugen Sie die Docker-Images lokal mit `...build` und starten Sie alles mit `...up`.
@@ -62,7 +106,12 @@ Denken Sie also daran, wenn Docker ein Image hat, sucht es weder in der Registry
 nach einem aktuelleren noch wird, bei geänderten Sourcen, ein neueres erzeugt.
 Sie müssen dass immer explizit mit `pull` oder `build` anstossen.
 
-### Starten mit bereits erzeugten Images
+### Starten mit Docker aus bereits erzeugten Images
+
+**[Achung: go-micro findet in der aktuellen Version 2.6.0 den Redis nicht, wenn
+er nicht auf localhost läuft. Daher funktioniert der Zugriff auf den Store nicht,
+wenn auch die Services und der Client als Docker-Conatainer laufen. Mit den
+Entwicklern habe ich diesbezüglich schon Verbindung aufgenommen.]**
 
 Wenn Sie beim `docker-compose`-Kommando keine Datei angeben, wird die Datei `docker-compose.yaml`
 verwendet. Darin sind die Docker-Images aus der GitHub-Registry angegeben. Dass heisst, Sie benötigen nur die Datei `docker-compose.yaml` und überhaupt keine Sourcen.
