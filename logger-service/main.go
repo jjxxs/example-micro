@@ -37,8 +37,6 @@ func (s *Sub) Process(ctx context.Context, event *api.Event) error {
 	}
 	err := s.store.Write(&record)
 
-	logger.Infof("store: %+v", s.store)
-
 	if err != nil {
 		logger.Infof("error while writing to store: %+v", err)
 	}
