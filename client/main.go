@@ -39,7 +39,7 @@ func (c Client) interact() {
 			logger.Infof("Received: %+v", rsp.GetGreeting())
 		}
 
-		res, err := c.store.Read("sleep")
+		res, err := c.store.Read("sleep", func(r *store.ReadOptions) { r.Table = "sleeper" })
 
 		sleep := 1000
 

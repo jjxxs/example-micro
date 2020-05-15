@@ -35,7 +35,7 @@ func (s *Sub) Process(ctx context.Context, event *api.Event) error {
 		Value:  newSleep,
 		Expiry: 0,
 	}
-	err := s.store.Write(&record)
+	err := s.store.Write(&record, func(o *store.WriteOptions) { o.Table = "sleeper" })
 
 	if err != nil {
 		logger.Infof("error while writing to store: %+v", err)
