@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: start servers
+name: start szenario
 
 steps:
     - name: etcd
@@ -27,12 +27,12 @@ steps:
     # - loggerdocker
     # - clientdocker
 
----
-kind: pipeline
-type: docker
-name: start services
+    # ---
+    # kind: pipeline
+    # type: docker
+    # name: start services
 
-steps:
+    # steps:
     - name: greeter
       image: docker.pkg.github.com/vesose/example-micro/greeter:latest
       environment:
@@ -60,15 +60,15 @@ steps:
           - /app/logger-service --registry_address=etcd:2379  --broker_address=nats:4222 --store_address=redis:6379  --store_table=sleeper
       detach: true
 
-depends_on:
-    - start servers
+    # depends_on:
+    #     - start servers
 
----
-kind: pipeline
-type: docker
-name: start client
+    # ---
+    # kind: pipeline
+    # type: docker
+    # name: start client
 
-steps:
+    # steps:
     - name: client
       image: docker.pkg.github.com/vesose/example-micro/client:latest
       environment:
@@ -77,8 +77,8 @@ steps:
           - sleep 5
           - /app/client --registry_address=etcd:2379  --store_address=redis:6379  --store_table=sleeper
 
-depends_on:
-    - start services
+# depends_on:
+#     - start services
 
 # als Secret dockerconfig
 # das AuthToken bekommen Sie als Ergebnis des Aufrufs
