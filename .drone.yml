@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: default
+name: lint
 
 steps:
     - name: lint
@@ -8,6 +8,12 @@ steps:
       commands:
           - golangci-lint run
 
+---
+kind: pipeline
+type: docker
+name: greeterdocker
+
+steps:
     - name: docker (greeter-service)
       image: plugins/docker
       settings:
@@ -26,6 +32,15 @@ steps:
               exclude:
                   - pull_request
 
+depends_on:
+    - lint
+
+---
+kind: pipeline
+type: docker
+name: counterdocker
+
+steps:
     - name: docker (counter-service)
       image: plugins/docker
       settings:
@@ -44,6 +59,15 @@ steps:
               exclude:
                   - pull_request
 
+depends_on:
+    - lint
+
+---
+kind: pipeline
+type: docker
+name: loggerdocker
+
+steps:
     - name: docker (logger-service)
       image: plugins/docker
       settings:
@@ -62,6 +86,15 @@ steps:
               exclude:
                   - pull_request
 
+depends_on:
+    - lint
+
+---
+kind: pipeline
+type: docker
+name: clientdocker
+
+steps:
     - name: docker (client)
       image: plugins/docker
       settings:
@@ -79,3 +112,24 @@ steps:
           event:
               exclude:
                   - pull_request
+
+depends_on:
+    - lint
+
+---
+kind: pipeline
+type: docker
+name: start
+
+steps:
+    - name: start etcd
+      image: "bitnami/etcd:latest"
+    #   environment:
+    #       - ALLOW_NONE_AUTHENTICATION=yes
+    #       - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+
+depends_on:
+    - greeterdocker
+    - counterdocker
+    - loggerdocker
+    - clientdocker
