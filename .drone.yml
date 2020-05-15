@@ -155,20 +155,20 @@ steps:
           - sleep 10
           - /app/greeter-service --registry_address=etcd:2379
 
-# depends_on:
+image_pull_secrets:
+    - dockerconfig
+    # depends_on:
 #     - greeterdocker
 #     - counterdocker
 #     - loggerdocker
 #     - clientdocker
 
-# als Secret ghdockerconfig
+# als Secret dockerconfigjson
 # {
 # 	"auths": {
-# 		"https://docker.pkg.github.com": {
+# 		"docker.pkg.github.com": {
 # 			"auth": "YW11cmRhY2E6c3VwZXJzZWNyZXRwYXNzd29yZA=="
 # 		}
 # 	}
 # }
 
-image_pull_secrets:
-    - ghdockerconfig
