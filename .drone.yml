@@ -119,17 +119,42 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: start
+name: start deps
 
 steps:
-    - name: start etcd
+    - name: etcd
       image: "bitnami/etcd:latest"
-    #   environment:
-    #       - ALLOW_NONE_AUTHENTICATION=yes
-    #       - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      environment:
+          ALLOW_NONE_AUTHENTICATION: yes
+          ETCD_ADVERTISE_CLIENT_URLS: http://etcd:2379
+      detach: true
+
+    - name: nats
+      image: nats
+      detach: true
+
+    - name: redis
+      image: "bitnami/redis:latest"
+      environment:
+          ALLOW_EMPTY_PASSWORD: yes
+      detach: true
 
 depends_on:
     - greeterdocker
     - counterdocker
     - loggerdocker
     - clientdocker
+
+---
+kind: pipeline
+type: docker
+name: start services
+
+steps:
+    - name: lint
+      image: golangci/golangci-lint
+      commands:
+          - golangci-lint run
+
+depends_on:
+    - start deps
