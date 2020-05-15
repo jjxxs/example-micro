@@ -1,6 +1,7 @@
-kind: pipeline
-type: docker
-name: lint
+# ---
+# kind: pipeline
+# type: docker
+# name: lint
 
 # steps:
 #     - name: lint
@@ -115,11 +116,10 @@ name: lint
 
 # depends_on:
 #     - lint
-
-# ---
-# kind: pipeline
-# type: docker
-# name: start services
+---
+kind: pipeline
+type: docker
+name: start servers
 
 steps:
     - name: etcd
@@ -139,31 +139,68 @@ steps:
           ALLOW_EMPTY_PASSWORD: yes
       detach: true
 
-    - name: test
-      image: redis
-      commands:
-          - sleep 5
-          - redis-cli -h redis ping
-          - redis-cli -h redis set FOO bar
-          - redis-cli -h redis get FOO
+    # depends_on:
+    # - greeterdocker
+    # - counterdocker
+    # - loggerdocker
+    # - clientdocker
 
+---
+kind: pipeline
+type: docker
+name: start services
+
+steps:
     - name: greeter
       image: docker.pkg.github.com/vesose/example-micro/greeter:latest
       environment:
           ALLOW_NONE_AUTHENTICATION: yes
       commands:
-          - sleep 10
+          - sleep 5
           - /app/greeter-service --registry_address=etcd:2379
+      detach: true
 
-image_pull_secrets:
-    - dockerconfig
-    # depends_on:
-#     - greeterdocker
-#     - counterdocker
-#     - loggerdocker
-#     - clientdocker
+    - name: counter
+      image: docker.pkg.github.com/vesose/example-micro/counter:latest
+      environment:
+          ALLOW_NONE_AUTHENTICATION: yes
+      commands:
+          - sleep 5
+          - /app/counter-service --registry_address=etcd:2379  --broker_address=nats:4222
+      detach: true
 
-# als Secret dockerconfigjson
+    - name: logger
+      image: docker.pkg.github.com/vesose/example-micro/logger:latest
+      environment:
+          ALLOW_NONE_AUTHENTICATION: yes
+      commands:
+          - sleep 5
+          - /app/logger-service --registry_address=etcd:2379  --broker_address=nats:4222 --store_address=redis:6379  --store_table=sleeper
+      detach: true
+
+depends_on:
+    - start servers
+
+---
+kind: pipeline
+type: docker
+name: start services
+
+steps:
+    - name: client
+      image: docker.pkg.github.com/vesose/example-micro/client:latest
+      environment:
+          ALLOW_NONE_AUTHENTICATION: yes
+      commands:
+          - sleep 5
+          - /app/client --registry_address=etcd:2379  --store_address=redis:6379  --store_table=sleeper
+
+depends_on:
+    - start services
+
+# als Secret dockerconfig
+# das AuthToken bekommen Sie als Ergebnis des Aufrufs
+# echo -u username:token | base64
 # {
 # 	"auths": {
 # 		"docker.pkg.github.com": {
@@ -172,3 +209,5 @@ image_pull_secrets:
 # 	}
 # }
 
+image_pull_secrets:
+    - dockerconfig
