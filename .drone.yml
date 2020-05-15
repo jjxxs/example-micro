@@ -146,8 +146,29 @@ steps:
           - redis-cli -h redis ping
           - redis-cli -h redis set FOO bar
           - redis-cli -h redis get FOO
+
+    - name: greeter
+      image: docker.pkg.github.com/vesose/example-micro/greeter:latest
+      environment:
+          ALLOW_NONE_AUTHENTICATION: yes
+      commands:
+          - sleep 10
+          - /app/greeter-service --registry_address=etcd:2379
+
 # depends_on:
 #     - greeterdocker
 #     - counterdocker
 #     - loggerdocker
 #     - clientdocker
+
+# als Secret ghdockerconfig
+# {
+# 	"auths": {
+# 		"https://docker.pkg.github.com": {
+# 			"auth": "YW11cmRhY2E6c3VwZXJzZWNyZXRwYXNzd29yZA=="
+# 		}
+# 	}
+# }
+
+image_pull_secrets:
+    - ghdockerconfig
