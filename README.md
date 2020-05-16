@@ -39,7 +39,7 @@ er aus einem Key/Value-Store auszulesen.
 Starten Sie die drei benötigten Server mit folgendem Kommando:
 
 ```
-docker-compose -f docker-compose-deps.yaml up
+docker-compose -f docker-compose.deps.yaml up
 ```
 
 oder
@@ -62,9 +62,9 @@ die drei Services und den Client:
 
 ```
 # jede Zeile in einem anderen Terminal
-go run greeter-service/main.go
-go run counter-service/main.go
-go run logger-service/main.go
+go run greeter/service/main.go
+go run counter/service/main.go
+go run logger/service/main.go
 go run client/main.go
 ```
 
@@ -81,7 +81,7 @@ Wenn die Dockerfiles beim ersten Start nicht vorhanden sind, werden sie automati
 erzeugt bzw. heruntergeladen.
 
 ```
-docker-compose -f docker-compose-local.yaml up
+docker-compose -f docker-compose.local.yaml up
 ```
 
 Wenn Sie neuere Vesionen der Images verwenden wollen, nutzen Sie `pull` bzw. `build`.
@@ -89,17 +89,17 @@ Wenn Sie ein neues Image, das nur für den Build-Step verwendet wird, herunterla
 wollen, verwenden Sie `build --pull`.
 
 ```
-docker-compose -f docker-compose-local.yaml pull
-docker-compose -f docker-compose-local.yaml build --pull
+docker-compose -f docker-compose.local.yaml pull
+docker-compose -f docker-compose.local.yaml build --pull
 # oder
-docker-compose -f docker-compose-local.yaml build
+docker-compose -f docker-compose.local.yaml build
 ```
 
 Wenn Sie an einem einzelnen Service etwas ändern, können Sie auch nur für diesen
 ein neues Docker-Image erzeugen, z.B.
 
 ```
-docker-compose -f docker-compose-local.yaml build client
+docker-compose -f docker-compose.local.yaml build client
 ```
 
 Denken Sie also daran, wenn Docker ein Image hat, sucht es weder in der Registry

@@ -18,7 +18,7 @@ steps:
     - name: docker (greeter-service)
       image: plugins/docker
       settings:
-          dockerfile: greeter-service/Dockerfile
+          dockerfile: greeter/service/Dockerfile
           username:
               from_secret: gh_username
           password:

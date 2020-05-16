@@ -24,7 +24,7 @@ services:
     greeter-service:
         build:
             context: .
-            dockerfile: greeter-service/Dockerfile
+            dockerfile: greeter/service/Dockerfile
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
         command: --registry_address=etcd:2379
