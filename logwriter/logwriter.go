@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2/store"
 	"github.com/vesose/example-micro/api"
@@ -20,8 +19,7 @@ func New(store store.Store) *LogWriter {
 }
 
 func (s *LogWriter) Process(ctx context.Context, event *api.Event) error {
-	md, _ := metadata.FromContext(ctx)
-	logger.Infof("Received event %+v with metadata %+v", event, md)
+	logger.Infof("Received event msg: %+v", event.GetMessage())
 
 	newSleep := []byte(fmt.Sprintf("%v", rand.Intn(2000)))
 
