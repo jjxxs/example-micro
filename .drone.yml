@@ -99,7 +99,7 @@ steps:
     - name: docker (client)
       image: plugins/docker
       settings:
-          dockerfile: client/Dockerfile
+          dockerfile: client/service/Dockerfile
           username:
               from_secret: gh_username
           password:

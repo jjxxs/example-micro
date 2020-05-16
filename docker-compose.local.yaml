@@ -43,7 +43,7 @@ services:
     client:
         build:
             context: .
-            dockerfile: client/Dockerfile
+            dockerfile: client/service/Dockerfile
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
         command: --registry_address=etcd:2379 --store_address=redis:6379  --store_table=sleeper
