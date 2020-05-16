@@ -30,7 +30,7 @@ services:
         image: docker.pkg.github.com/vesose/example-micro/logwriter:latest
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
-        command: --registry_address=etcd:2379 --broker_address=nats://nats:4222 --store_address=redis:6379 --store_table=sleeper
+        command: --registry_address=etcd:2379 --broker_address=nats://nats:4222 --store_address=redis:6379
         links:
             - etcd
             - nats
@@ -38,6 +38,6 @@ services:
         image: docker.pkg.github.com/vesose/example-micro/client:latest
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
-        command: --registry_address=etcd:2379 --store_address=redis:6379  --store_table=sleeper
+        command: --registry_address=etcd:2379 --store_address=redis:6379
         links:
             - etcd

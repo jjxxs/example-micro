@@ -48,9 +48,6 @@ func (c *Client) Interact() {
 			sleep, err = strconv.Atoi(string(res[0].Value))
 			if err != nil {
 				logger.Errorf("error while converting value from store: %+v", err)
-				sleep = 1
-			} else {
-				logger.Infof("read from store: %+v", sleep)
 			}
 		}
 
