@@ -14,7 +14,7 @@ services:
     counter-service:
         build:
             context: .
-            dockerfile: counter-service/Dockerfile
+            dockerfile: counter/service/Dockerfile
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
         command: --registry_address=etcd:2379 --broker_address=nats:4222
