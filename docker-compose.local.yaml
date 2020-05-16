@@ -30,10 +30,10 @@ services:
         command: --registry_address=etcd:2379
         links:
             - etcd
-    logger-service:
+    logwriter-service:
         build:
             context: .
-            dockerfile: logger-service/Dockerfile
+            dockerfile: logwriter/service/Dockerfile
         environment:
             - ALLOW_NONE_AUTHENTICATION=yes
         command: --registry_address=etcd:2379 --broker_address=nats://nats:4222 --store_address=redis:6379 --store_table=sleeper

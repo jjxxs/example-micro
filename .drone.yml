@@ -66,19 +66,19 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: loggerdocker
+name: logwriterdocker
 
 steps:
-    - name: docker (logger-service)
+    - name: docker (logwriter-service)
       image: plugins/docker
       settings:
-          dockerfile: logger-service/Dockerfile
+          dockerfile: logwriter/service/Dockerfile
           username:
               from_secret: gh_username
           password:
               from_secret: gh_token
           registry: docker.pkg.github.com
-          repo: docker.pkg.github.com/vesose/example-micro/logger
+          repo: docker.pkg.github.com/vesose/example-micro/logwriter
       when:
           branch:
               - master
@@ -157,13 +157,13 @@ steps:
           - /app/counter-service --registry_address=etcd:2379  --broker_address=nats:4222
       detach: true
 
-    - name: logger
-      image: docker.pkg.github.com/vesose/example-micro/logger:latest
+    - name: logwriter
+      image: docker.pkg.github.com/vesose/example-micro/logwriter:latest
       environment:
           ALLOW_NONE_AUTHENTICATION: yes
       commands:
           - sleep 5
-          - /app/logger-service --registry_address=etcd:2379  --broker_address=nats:4222 --store_address=redis:6379  --store_table=sleeper
+          - /app/logwriter-service --registry_address=etcd:2379  --broker_address=nats:4222 --store_address=redis:6379  --store_table=sleeper
       detach: true
 
     - name: client
@@ -177,7 +177,7 @@ steps:
 depends_on:
     - greeterdocker
     - counterdocker
-    - loggerdocker
+    - logwriterdocker
     - clientdocker
 
 # als Secret dockerconfig
