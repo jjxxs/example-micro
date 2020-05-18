@@ -21,7 +21,7 @@ func New(store store.Store) *LogWriter {
 func (s *LogWriter) Process(ctx context.Context, event *api.Event) error {
 	logger.Infof("Received event msg: %+v", event.GetMessage())
 
-	newSleep := []byte(fmt.Sprintf("%v", rand.Intn(2000)))
+	newSleep := []byte(fmt.Sprintf("%v", rand.Intn(2000))) // nolint:gomnd
 
 	record := store.Record{
 		Key:    "sleep",
