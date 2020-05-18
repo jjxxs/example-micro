@@ -70,11 +70,6 @@ go run client/main.go
 
 ### Starten mit Docker aus lokalen Sourcen
 
-**[Achung: go-micro findet in der aktuellen Version 2.6.0 den Redis nicht, wenn
-er nicht auf localhost läuft. Daher funktioniert der Zugriff auf den Store nicht,
-wenn auch die Services und der Client als Docker-Conatainer laufen. Mit den
-Entwicklern habe ich diesbezüglich schon Verbindung aufgenommen.]**
-
 Die Datei `docker-compose-local.yaml` definiert die Services über die `Dockerfiles`.
 Erzeugen Sie die Docker-Images lokal mit `...build` und starten Sie alles mit `...up`.
 Wenn die Dockerfiles beim ersten Start nicht vorhanden sind, werden sie automatisch
@@ -107,11 +102,6 @@ nach einem aktuelleren noch wird, bei geänderten Sourcen, ein neueres erzeugt.
 Sie müssen dass immer explizit mit `pull` oder `build` anstossen.
 
 ### Starten mit Docker aus bereits erzeugten Images
-
-**[Achung: go-micro findet in der aktuellen Version 2.6.0 den Redis nicht, wenn
-er nicht auf localhost läuft. Daher funktioniert der Zugriff auf den Store nicht,
-wenn auch die Services und der Client als Docker-Conatainer laufen. Mit den
-Entwicklern habe ich diesbezüglich schon Verbindung aufgenommen.]**
 
 Wenn Sie beim `docker-compose`-Kommando keine Datei angeben, wird die Datei `docker-compose.yaml`
 verwendet. Darin sind die Docker-Images aus der GitHub-Registry angegeben. Dass heisst, Sie benötigen nur die Datei `docker-compose.yaml` und überhaupt keine Sourcen.
