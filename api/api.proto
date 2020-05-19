@@ -11,7 +11,7 @@ message HelloRequest {
 }
 
 message HelloResponse {
-  string greeting = 2;
+  string greeting = 1;
 }
 
 service HelloCounter {
@@ -19,11 +19,11 @@ service HelloCounter {
 }
 
 message IncRequest {
-  string name = 3;
+  string name = 1;
 }
 
 message SumResponse {
-  int32 counter = 4;
+  int32 counter = 1;
 }
 
 message Event {
