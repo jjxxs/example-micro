@@ -1,4 +1,4 @@
-name: Publish Greeter Docker
+name: Publish Counter Docker Image
 on: [push]
 jobs:
   build:
