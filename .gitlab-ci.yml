@@ -4,6 +4,7 @@ stages:
   - lint
   - test
   - build
+  - integrationtest
 
 make_lint:
   image: golangci/golangci-lint
@@ -51,3 +52,29 @@ logwriter_docker:
   script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/logwriter/service/Dockerfile --destination $CI_REGISTRY_IMAGE/logwriter:$CI_COMMIT_TAG
+
+run_scenario1:
+  stage: integrationtest
+  image: obraun/golang-micro-ci
+  services:
+    - name: bitnami/etcd:latest
+      alias: etcd
+    - name: nats
+    - name: bitnami/redis:latest
+      alias: redis
+    - name: $CI_REGISTRY_IMAGE/greeter
+      alias: greeter
+    - name: $CI_REGISTRY_IMAGE/counter
+      alias: counter
+    - name: $CI_REGISTRY_IMAGE/logwriter
+      alias: logwriter
+    - name: $CI_REGISTRY_IMAGE/greeter
+      alias: greeter
+  variables:
+    ALLOW_EMPTY_PASSWORD: yes
+    ALLOW_NONE_AUTHENTICATION: yes
+    ETCD_ADVERTISE_CLIENT_URLS: http://etcd:2379
+    
+  script:
+    - sleep 5
+    - go run client/service/main.go
