@@ -64,16 +64,20 @@ run_scenario1:
       alias: redis
     - name: $CI_REGISTRY_IMAGE/greeter
       alias: greeter
+      command: ["--registry_address=etcd:2379"]
     - name: $CI_REGISTRY_IMAGE/counter
       alias: counter
+      command: ["--registry_address=etcd:2379", "--broker_address=nats:4222"]
     - name: $CI_REGISTRY_IMAGE/logwriter
       alias: logwriter
+      command: ["--registry_address=etcd:2379", "--broker_address=nats:4222", "--store_address=redis:6379", "--store_table=sleeper"]
     - name: $CI_REGISTRY_IMAGE/greeter
       alias: greeter
+      command: ["--registry_address=etcd:2379"]
   variables:
     ALLOW_EMPTY_PASSWORD: "yes"
     ALLOW_NONE_AUTHENTICATION: "yes"
     ETCD_ADVERTISE_CLIENT_URLS: http://etcd:2379
   script:
     - sleep 5
-    - go run client/service/main.go
+    - go run client/service/main.go --registry_address=etcd:2379 --store_address=redis:6379  --store_table=sleeper
