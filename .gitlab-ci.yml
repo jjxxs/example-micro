@@ -71,10 +71,9 @@ run_scenario1:
     - name: $CI_REGISTRY_IMAGE/greeter
       alias: greeter
   variables:
-    ALLOW_EMPTY_PASSWORD: yes
-    ALLOW_NONE_AUTHENTICATION: yes
+    ALLOW_EMPTY_PASSWORD: "yes"
+    ALLOW_NONE_AUTHENTICATION: "yes"
     ETCD_ADVERTISE_CLIENT_URLS: http://etcd:2379
-    
   script:
     - sleep 5
     - go run client/service/main.go
