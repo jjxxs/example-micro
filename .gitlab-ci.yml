@@ -64,7 +64,7 @@ run_scenario1:
     #   alias: redis
     - name: $CI_REGISTRY_IMAGE/greeter
       alias: greeter
-      command: ["--registry_address=etcd:2379 --sleep=30"]
+      command: ["--registry_address=etcd:2379", "--sleep=30"]
     # - name: $CI_REGISTRY_IMAGE/counter
     #   alias: counter
     #   command: ["--registry_address=etcd:2379", "--broker_address=nats:4222"]
